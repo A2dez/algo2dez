@@ -17,6 +17,10 @@ cmu <- read_csv('Carnegie_Mellon_Original_Cleaned.csv')
 
 # 0. clean the data -------------------------------------------------------
 
+#remove  nas in the phone section
+cmu <- filter(cmu, is.na(cmu$phonForm)  == F)
+
+
 #this is hilarious. the letters 'NA' form an entry and R read is as NA
 x <- which(is.na(cmu$word))
 # cmu[x,]
@@ -26,10 +30,8 @@ x <- which(is.na(cmu$word))
 #   <chr> <chr>     <int>
 # 1 NA    N AA1        NA
 
-cmu[x, 1] = 'na'
+cmu[x, 'word'] = 'na'
 
-#remove  nas in the phone section
-cmu <- filter(cmu, is.na(cmu$phonForm)  == F)
 
 
 #make letters lowercase 
@@ -52,7 +54,7 @@ phoneset_freqs$vorc <- str_extract(phoneset_freqs$., '\\d')
 
 
 phoneset_freqs <- phoneset_freqs %>% 
-  arrange(vorc, Freq) 
+  arrange(vorc, desc(Freq))
 
 #order phones by stress pattern
 phoneset_freqs$. <- fct_reorder2(phoneset_freqs$., phoneset_freqs$vorc, phoneset_freqs$Freq)
